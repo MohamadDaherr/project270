@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <functions.c>
+#include "functions.c"
 
 int main() {
   char grid1 [10][10];
