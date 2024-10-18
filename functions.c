@@ -31,7 +31,8 @@ void print_Grid(char grid[10][10]){
     // Display the column headers (A-J)
     printf("   A B C D E F G H I J\n");
     
-    // Display the grid with row numbers (1-10)
+
+    // Display the grid with row numbers (1-10).
     for (int i = 0; i < 10; i++) {
         printf("%2d ", i + 1); 
         for (int j = 0; j < 10; j++) {
@@ -49,7 +50,6 @@ void create_grid(char grid[10][10]) {
         }
     }
 }
-
 
 
 int difficultyLevel() {
