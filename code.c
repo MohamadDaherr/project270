@@ -16,6 +16,7 @@ int main() {
     printf("%s please enter your ships",player1 );
     place_ships(grid1);
     print_Grid(grid1);
+    clear_screen();
     printf("%s please enter your ships",player2);
     place_ships(grid2);
     print_Grid(grid2);
