@@ -147,3 +147,50 @@ int firstPlayer(char player1[], char player2[]) {
     }
 }
 
+void clear_screen() {
+    #ifdef _WIN32
+        system("cls");  // Windows command to clear screen
+    #else
+        system("clear");  // Unix/Linux/macOS command to clear screen
+    #endif
+}
+
+int done() {
+    char input;
+    // Loop until the user enters 'd'
+    while (1) {
+        printf("Enter 'd' when you are done: ");
+        scanf(" %c", &input);  
+        input = tolower(input);
+        if (input == 'd') {
+            printf("Thank you! You entered 'd'.\n");
+            return 1;
+        } else {
+            printf("Invalid input. Please enter 'd' to indicate you are done.\n");
+        }
+    }
+}
+int main() {
+  char grid1 [10][10];
+  char grid2 [10][10];
+    create_grid(grid1);
+    create_grid(grid2);
+    int difficulty = difficultyLevel();
+    char player1[50], player2[50];  
+    printf("Enter name of Player 1: ");
+    scanf("%s", player1);
+    printf("Enter name of Player 2: ");
+    scanf("%s", player2);
+    printf("%s please enter your ships",player1 );
+    place_ships(grid1);
+    print_Grid(grid1);
+    if(done()){
+      clear_screen();
+    }
+    printf("%s please enter your ships",player2);
+    place_ships(grid2);
+    print_Grid(grid2);
+    if(done()){
+      clear_screen();
+    }
+}
