@@ -120,10 +120,10 @@ void place_ships(char grid[10][10]){
                 for (int j = 0; j < ships[i].size; j++)
                 {
                     if(orientation =='H' || orientation =='h'){
-                        grid[row][col + j] = ship;
+                        grid[row][col + j] = ships[i].name[0];
                     }
                     else{
-                        grid[row+j][col]= ship;
+                        grid[row+j][col]= ships[i].name[0];
                     }
                 }
                 valid =0;
@@ -147,22 +147,3 @@ int firstPlayer(char player1[], char player2[]) {
     }
 }
 
-
-int main() {
-  char grid1 [10][10];
-  char grid2 [10][10];
-    create_grid(grid1);
-    create_grid(grid2);
-    int difficulty = difficultyLevel();
-    char player1[50], player2[50];  
-    printf("Enter name of Player 1: ");
-    scanf("%s", player1);
-    printf("Enter name of Player 2: ");
-    scanf("%s", player2);
-    printf("%s enter your ships \n\n",player1 );
-    place_ships(grid1);
-    print_Grid(grid1);
-    printf("%s enter your ships \n\n",player2);
-    place_ships(grid2);
-    print_Grid(grid2);
-}
