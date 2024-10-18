@@ -27,18 +27,12 @@ Ship ships[] = {
 
 int total_ships = sizeof(ships) / sizeof(ships[0]);
 
-void create_grid() {
-    // Initialize a 10x10 grid with '~' representing water
-    char grid[10][10];
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
-            grid[i][j] = water;
-        }
-    }
+void print_Grid(char grid[10][10]){
     // Display the column headers (A-J)
     printf("   A B C D E F G H I J\n");
     
-    // Display the grid with row numbers (1-10)
+
+    // Display the grid with row numbers (1-10).
     for (int i = 0; i < 10; i++) {
         printf("%2d ", i + 1); 
         for (int j = 0; j < 10; j++) {
@@ -47,6 +41,16 @@ void create_grid() {
         printf("\n");
     }
 }
+
+void create_grid(char grid[10][10]) {
+
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            grid[i][j] = water;
+        }
+    }
+}
+
 
 int difficultyLevel() {
     char difficulty[10];
@@ -94,32 +98,32 @@ int check_coordinates(int row , int col, int size, char orientation, char grid[G
     return 1;
 }
 
-void place_ships(char grid[Grid_size][Grid_size]){
+void place_ships(char grid[10][10]){
     for (int i = 0; i < total_ships; i++)
     {
         int row,col;
         char orientation;
         int valid =1;
 
-        while (valid)
+        while(valid)
         {
-            printf("Place your %s (size %d).\n");
-            printf("Enter column (A_J), row (1-10), and orientation (H for horizontal, V for vertical): ",ships[i].name,ships[i].size);
+            printf("Place your %s (size %d).\n",ships[i].name,ships[i].size);
+            printf("Enter column (A_J), row (1-10), and orientation (H for horizontal, V for vertical): ");
             
             //This variable to convert from letter to the exact index
             char column;
-            scan_f("%c %d %c", &column, &row, &orientation);          
+            scanf(" %c %d %c", &column, &row, &orientation);          
             col = column -'A';
             row--;
 
             if(check_coordinates(row,col,ships[i].size,orientation,grid)){
-                for (int i = 0; i < ships[i].size; i++)
+                for (int j = 0; j < ships[i].size; j++)
                 {
-                    if(orientation=='H' || orientation=='h'){
-                        grid[row][col + i] = ship;
+                    if(orientation =='H' || orientation =='h'){
+                        grid[row][col + j] = ship;
                     }
                     else{
-                        grid[row+i][col]= ship;
+                        grid[row+j][col]= ship;
                     }
                 }
                 valid =0;
@@ -147,4 +151,18 @@ void firstPlayer(char player1[], char player2[]) {
     } else {
         printf("%s gets the first move!\n", player2);
     }
+}
+
+
+int main() {
+    char grid[10][10];
+
+    create_grid(grid);
+    int difficulty = difficultyLevel();
+    char player1[50], player2[50];  
+    playerNames(player1, player2);
+    firstPlayer(player1, player2);
+
+    place_ships(grid);   
+    print_Grid(grid);
 }
