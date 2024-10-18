@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <time.h>
 #define water '~'
 
 void create_grid() {
@@ -47,7 +49,20 @@ int difficultyLevel() {
     }
 }
 
-int main(){
-  create_grid();
-  int level = difficultyLevel();
+void playerNames(char player1[], char player2[]) {
+    printf("Enter name of Player 1: ");
+    scanf("%s", player1);
+
+    printf("Enter name of Player 2: ");
+    scanf("%s", player2);
+}
+
+void firstPlayer(char player1[], char player2[]) {
+  srand(time(NULL));
+    int first_player = rand() % 2;  
+    if (first_player == 0) {
+        printf("%s gets the first move!\n", player1);
+    } else {
+        printf("%s gets the first move!\n", player2);
+    }
 }
