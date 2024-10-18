@@ -135,34 +135,34 @@ void place_ships(char grid[10][10]){
     }
 }
 
-void playerNames(char player1[], char player2[]) {
-    printf("Enter name of Player 1: ");
-    scanf("%s", player1);
-
-    printf("Enter name of Player 2: ");
-    scanf("%s", player2);
-}
-
-void firstPlayer(char player1[], char player2[]) {
+int firstPlayer(char player1[], char player2[]) {
   srand(time(NULL));
     int first_player = rand() % 2;  
     if (first_player == 0) {
         printf("%s gets the first move!\n", player1);
+        return 1;
     } else {
         printf("%s gets the first move!\n", player2);
+        return 2;
     }
 }
 
 
 int main() {
-    char grid[10][10];
-
-    create_grid(grid);
+  char grid1 [10][10];
+  char grid2 [10][10];
+    create_grid(grid1);
+    create_grid(grid2);
     int difficulty = difficultyLevel();
     char player1[50], player2[50];  
-    playerNames(player1, player2);
-    firstPlayer(player1, player2);
-
-    place_ships(grid);   
-    print_Grid(grid);
+    printf("Enter name of Player 1: ");
+    scanf("%s", player1);
+    printf("Enter name of Player 2: ");
+    scanf("%s", player2);
+    printf("%s enter your ships \n\n",player1 );
+    place_ships(grid1);
+    print_Grid(grid1);
+    printf("%s enter your ships \n\n",player2);
+    place_ships(grid2);
+    print_Grid(grid2);
 }
