@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define ship 'S'
 #define water '~'
@@ -106,7 +108,7 @@ void place_ships(char grid[Grid_size][Grid_size]){
             
             //This variable to convert from letter to the exact index
             char column;
-            scanf("%d %c %c", &column, &row, &orientation);          
+            scan_f("%c %d %c", &column, &row, &orientation);          
             col = column -'A';
             row--;
 
@@ -126,5 +128,23 @@ void place_ships(char grid[Grid_size][Grid_size]){
                 printf("Invalid Placement. Try again\n");
             }
         }
+    }
+}
+
+void playerNames(char player1[], char player2[]) {
+    printf("Enter name of Player 1: ");
+    scanf("%s", player1);
+
+    printf("Enter name of Player 2: ");
+    scanf("%s", player2);
+}
+
+void firstPlayer(char player1[], char player2[]) {
+  srand(time(NULL));
+    int first_player = rand() % 2;  
+    if (first_player == 0) {
+        printf("%s gets the first move!\n", player1);
+    } else {
+        printf("%s gets the first move!\n", player2);
     }
 }
