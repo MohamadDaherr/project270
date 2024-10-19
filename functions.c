@@ -7,6 +7,8 @@
 #define ship 'S'
 #define water '~'
 #define Grid_size 10
+#define hit '*'
+#define miss 'o'
 
 #define Carrier 5
 #define Battleship 4
@@ -26,6 +28,16 @@ Ship ships[] = {
 };
 
 int total_ships = sizeof(ships) / sizeof(ships[0]);
+int traverse_2d_array(char grid[10][10], int letter) {
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            if (grid[i][j] == letter) {
+                return 1;
+        }
+    }
+}
+return 0;
+}
 
 void print_Grid(char grid[10][10]){
     // Display the column headers (A-J)
@@ -147,13 +159,7 @@ int firstPlayer(char player1[], char player2[]) {
     }
 }
 
-void clear_screen() {
-    #ifdef _WIN32
-        system("cls");  // Windows command to clear screen
-    #else
-        system("clear");  // Unix/Linux/macOS command to clear screen
-    #endif
-}
+
 
 int done() {
     char input;
@@ -170,6 +176,42 @@ int done() {
         }
     }
 }
+
+int validate(int row , int col){
+if (col < 0 || col >= Grid_size || row < 0 || row >= Grid_size) {
+        printf("Invalid coordinates.");
+        return 0;
+    }
+    return 1;
+}
+
+void fire(char grid[10][10] , char command [50], int row , int col, char column) {
+    // Prompt for the fire command
+    printf("Enter your fire command (e.g., Fire B3): ");
+    scanf("%s %c%d", command, &column, &row);
+
+    // Convert the column to a corresponding index
+    col = toupper(column) - 'A';
+    row--;  // Adjust row index for 0-based array
+
+    // Validate the input coordinates
+    if (validate(row , col)){
+    // Check if the shot hits a ship or misses
+    if (grid[row][col] == 'C' || grid[row][col] == 'D' || grid[row][col] == 'S' || grid[row][col] == 'B') {
+        grid[row][col] = hit;  // Mark the hit
+        printf("Hit!\n");
+    }
+     else {
+        grid[row][col]==miss;
+        printf("Miss!\n");
+    }
+    }
+    else {
+       return;
+    }
+}
+    
+    
 int main() {
   char grid1 [10][10];
   char grid2 [10][10];
@@ -184,13 +226,10 @@ int main() {
     printf("%s please enter your ships",player1 );
     place_ships(grid1);
     print_Grid(grid1);
-    if(done()){
-      clear_screen();
-    }
+   
     printf("%s please enter your ships",player2);
     place_ships(grid2);
     print_Grid(grid2);
-    if(done()){
-      clear_screen();
-    }
+  
+    fire(grid1); 
 }
