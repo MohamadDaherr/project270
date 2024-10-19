@@ -211,7 +211,26 @@ void fire(char grid[10][10] , char command [50], int row , int col, char column)
     }
 }
     
-    
+void radar_sweep(int row,int col,char grid[10][10]){
+    if(!validate(row,col)){
+        printf("Invalid Coordinate!");
+        return;
+    }
+    int found = 0;
+    for (int i = row; i < row + 2 && i < Grid_size; i++) {
+        for (int j = col; j < col + 2 && j < Grid_size; j++) {
+            if (grid[i][j] !=water) {
+                found = 1;
+            }
+        }
+    }
+    if (found) {
+        printf("Enemy ships found in the area.\n");
+    } else {
+        printf("No enemy ships found.\n");
+    }
+}
+ 
 int main() {
   char grid1 [10][10];
   char grid2 [10][10];
