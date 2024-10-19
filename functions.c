@@ -185,40 +185,37 @@ if (col < 0 || col >= Grid_size || row < 0 || row >= Grid_size) {
     return 1;
 }
 
-void fire(char grid[10][10] , char command [50], int row , int col, char column) {
-    // Prompt for the fire command
-    printf("Enter your fire command (e.g., Fire B3): ");
-    scanf("%s %c%d", command, &column, &row);
-
-    // Convert the column to a corresponding index
+void fire(char grid[10][10] ,  int row ,char column) {
+    int col;
     col = toupper(column) - 'A';
-    row--;  // Adjust row index for 0-based array
+    row--;  
 
     // Validate the input coordinates
     if (validate(row , col)){
-    // Check if the shot hits a ship or misses
-    if (grid[row][col] == 'C' || grid[row][col] == 'D' || grid[row][col] == 'S' || grid[row][col] == 'B') {
-        grid[row][col] = hit;  // Mark the hit
-        printf("Hit!\n");
-    }
-     else {
-        grid[row][col]==miss;
-        printf("Miss!\n");
-    }
+        if (grid[row][col] == 'C' || grid[row][col] == 'D' || grid[row][col] == 'S' || grid[row][col] == 'B') {
+            grid[row][col] = hit;  
+            printf("Hit!\n");
+        }
+        else {
+            grid[row][col]==miss;
+            printf("Miss!\n");
+        }
     }
     else {
        return;
     }
 }
     
-void radar_sweep(int row,int col,char grid[10][10]){
+void radar_sweep(int row,char column,char grid[10][10]){
+    int col;
+    col = toupper(column) - 'A';
     if(!validate(row,col)){
         return;
     }
     int found = 0;
     for (int i = row; i < row + 2; i++) {
         for (int j = col; j < col + 2; j++) {
-            if (grid[i][j] !=water) {
+            if (grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S' || grid[i][j] == 'B') {
                 found = 1;
             }
         }
@@ -249,6 +246,7 @@ int main() {
     place_ships(grid2);
     print_Grid(grid2);
   
-    // fire(grid1); 
-    radar_sweep(2,11,grid1);
+    fire(grid1,2,'B');
+    print_Grid(grid1); 
+    radar_sweep(2,'B',grid1);
 }
