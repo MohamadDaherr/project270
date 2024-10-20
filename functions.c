@@ -15,6 +15,8 @@
 #define Destroyer 3
 #define Submarine 2
 
+int dificulty;
+
 typedef struct {
     char *name;
     int size;
@@ -76,9 +78,11 @@ int difficultyLevel() {
         }
 
         if (strcmp(difficulty, "easy") == 0) {
+            dificulty=1;
             printf("You have chosen easy mode.\n");
             return 1; 
         } else if (strcmp(difficulty, "hard") == 0) {
+            dificulty=0;
             printf("You have chosen hard mode.\n");
             return 2;
         } else {
