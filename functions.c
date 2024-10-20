@@ -80,9 +80,11 @@ void difficultyLevel() {
         if (strcmp(difficulty, "easy") == 0) {
             diff=0;
             printf("You have chosen easy mode.\n");
+            break;
         } else if (strcmp(difficulty, "hard") == 0) {
             diff=1;
             printf("You have chosen hard mode.\n");
+            break;
         } else {
             printf("Invalid input. Please enter either 'easy' or 'hard'.\n");// Reask the user to enter a valid level
         }
@@ -232,6 +234,41 @@ void radar_sweep(int row,char column,char grid[10][10]){
         printf("No enemy ships found.\n");
     }
 }
+void torpedo(char grid[10][10], char grid2[10][10], char target) {
+    int is_column = isalpha(target);
+    
+    if (is_column) {
+        int col = toupper(target) - 'A'; 
+
+        // Validate the column
+        if (col < 0 || col >= Grid_size) {
+            printf("Invalid column. You lose your turn.\n");
+            return;
+        }
+
+        // Fire at each row in the specified column
+        for (int row = 0; row < Grid_size; row++) {
+            fire(grid, grid2, row + 1, target); // Pass row as 1-based index
+        }
+    } else {
+        // Convert target to row number
+        int row = target - '1'; 
+
+        // Validate the row
+        if (row < 0 || row >= Grid_size) {
+            printf("Invalid row. You lose your turn.\n");
+            return;
+        }
+
+        // Fire at each column in the specified row
+        for (int col = 0; col < Grid_size; col++) {
+            fire(grid, grid2, row + 1, col + 'A'); // Pass col as character
+        }
+    }
+}
+
+
+        
  
 int main() {
   char grid1 [10][10];
@@ -257,8 +294,7 @@ int main() {
     print_Grid(grid2);
   fire(grid1,gridplayer1,2,'B');
   print_Grid(gridplayer1);
-
-
+  torpedo(grid1,gridplayer1,'A');
 
 
 
