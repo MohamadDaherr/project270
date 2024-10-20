@@ -15,7 +15,7 @@
 #define Destroyer 3
 #define Submarine 2
 
-int dificulty;
+int diff;
 
 typedef struct {
     char *name;
@@ -66,7 +66,7 @@ void create_grid(char grid[10][10]) {
 }
 
 
-int difficultyLevel() {
+void difficultyLevel() {
     char difficulty[10];
     
     while (1) {  
@@ -78,13 +78,11 @@ int difficultyLevel() {
         }
 
         if (strcmp(difficulty, "easy") == 0) {
-            dificulty=1;
+            diff=0;
             printf("You have chosen easy mode.\n");
-            return 1; 
         } else if (strcmp(difficulty, "hard") == 0) {
-            dificulty=0;
+            diff=1;
             printf("You have chosen hard mode.\n");
-            return 2;
         } else {
             printf("Invalid input. Please enter either 'easy' or 'hard'.\n");// Reask the user to enter a valid level
         }
@@ -189,22 +187,24 @@ if (col < 0 || col >= Grid_size || row < 0 || row >= Grid_size) {
     return 1;
 }
 
-void fire(char grid[10][10] ,  int row ,char column,int difficulty) {
+void fire(char grid[10][10] , char grid2[10][10], int row ,char column) {
     int col;
     col = toupper(column) - 'A';
-    row--;  
+    row--;
 
-    // Validate the input coordinates
     if (validate(row , col)){
         if (grid[row][col] == 'C' || grid[row][col] == 'D' || grid[row][col] == 'S' || grid[row][col] == 'B') {
             grid[row][col] = hit;  
+            grid2[row][col] = hit;
             printf("Hit!\n");
+
         }
         else {
-            if(difficulty==1){
-                grid[row][col]=miss;
+            if(diff==0){
+             grid[row][col]=miss;
+             grid2[row][col] = miss;
+                printf("Miss!\n");
             }
-            printf("Miss!\n");
         }
     }
     else {
@@ -219,8 +219,8 @@ void radar_sweep(int row,char column,char grid[10][10]){
         return;
     }
     int found = 0;
-    for (int i = row; i < row + 2; i++) {
-        for (int j = col; j < col + 2; j++) {
+    for (int i = row; i < row + 2 && i<Grid_size; i++) {
+        for (int j = col; j < col + 2 && j<Grid_size; j++) {
             if (grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S' || grid[i][j] == 'B') {
                 found = 1;
             }
@@ -236,9 +236,13 @@ void radar_sweep(int row,char column,char grid[10][10]){
 int main() {
   char grid1 [10][10];
   char grid2 [10][10];
+  char gridplayer1 [10][10];
+  char gridplayer2 [10][10];
     create_grid(grid1);
     create_grid(grid2);
-    int difficulty = difficultyLevel();
+    create_grid(gridplayer1);
+    create_grid(gridplayer2);
+    difficultyLevel();
     char player1[50], player2[50];  
     printf("Enter name of Player 1: ");
     scanf("%s", player1);
@@ -251,9 +255,13 @@ int main() {
     printf("%s please enter your ships",player2);
     place_ships(grid2);
     print_Grid(grid2);
-  
-    fire(grid1,2,'B',difficulty);
-    fire(grid1,4,'I',difficulty);
-    print_Grid(grid1); 
-    radar_sweep(2,'B',grid1);
+  fire(grid1,gridplayer1,2,'B');
+  print_Grid(gridplayer1);
+
+
+
+
+
+
+   
 }
