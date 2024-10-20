@@ -78,11 +78,14 @@ void difficultyLevel() {
         }
 
         if (strcmp(difficulty, "easy") == 0) {
+            
             diff=0;
             printf("You have chosen easy mode.\n");
+            break;
         } else if (strcmp(difficulty, "hard") == 0) {
             diff=1;
             printf("You have chosen hard mode.\n");
+            break;
         } else {
             printf("Invalid input. Please enter either 'easy' or 'hard'.\n");// Reask the user to enter a valid level
         }
@@ -232,6 +235,41 @@ void radar_sweep(int row,char column,char grid[10][10]){
         printf("No enemy ships found.\n");
     }
 }
+
+void smokeScreen(char grid[10][10] ,  int column ,char row){
+    int col;
+    col = toupper(column) - 'A';
+    row--;
+    int rr=row;
+    int cc=col;
+    if((rr<10 && cc<10) && (grid[rr][cc] == 'C' || grid[rr][cc] == 'D' || grid[rr][cc] == 'S' || grid[rr][cc] == 'B')){
+        char s=tolower(grid[rr][cc]);
+        grid[rr][cc]=s;
+    }
+    rr=row;
+    cc=col;
+    rr++;
+    if((rr<10 && cc<10) && (grid[rr][cc] == 'C' || grid[rr][cc] == 'D' || grid[rr][cc] == 'S' || grid[rr][cc] == 'B')){
+        char s=tolower(grid[rr][cc]);
+        grid[rr][cc]=s;
+    }
+    rr=row;
+    cc=col;
+    cc++;
+    if((rr<10 && cc<10) && (grid[rr][cc] == 'C' || grid[rr][cc] == 'D' || grid[rr][cc] == 'S' || grid[rr][cc] == 'B')){
+        char s=tolower(grid[rr][cc]);
+        grid[rr][cc]=s;
+    }
+    rr=row;
+    cc=col;
+    rr++;
+    cc++;
+    if(((rr<10 && cc<10)==1) && ((grid[rr][cc] == 'C') || (grid[rr][cc] == 'D') || (grid[rr][cc] == 'S') || (grid[rr][cc] == 'B'))){
+        char s=tolower(grid[rr][cc]);
+        grid[rr][cc]=s;
+    }
+
+}
  
 int main() {
   char grid1 [10][10];
@@ -257,7 +295,8 @@ int main() {
     print_Grid(grid2);
   fire(grid1,gridplayer1,2,'B');
   print_Grid(gridplayer1);
-
+    smokeScreen(grid1,'A',3);  
+    print_Grid(grid1);
 
 
 
