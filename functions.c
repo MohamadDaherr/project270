@@ -78,6 +78,7 @@ void difficultyLevel() {
         }
 
         if (strcmp(difficulty, "easy") == 0) {
+            
             diff=0;
             printf("You have chosen easy mode.\n");
             break;
@@ -269,6 +270,41 @@ void torpedo(char grid[10][10], char grid2[10][10], char target) {
 
 
         
+
+void smokeScreen(char grid[10][10] ,  int column ,char row){
+    int col;
+    col = toupper(column) - 'A';
+    row--;
+    int rr=row;
+    int cc=col;
+    if((rr<10 && cc<10) && (grid[rr][cc] == 'C' || grid[rr][cc] == 'D' || grid[rr][cc] == 'S' || grid[rr][cc] == 'B')){
+        char s=tolower(grid[rr][cc]);
+        grid[rr][cc]=s;
+    }
+    rr=row;
+    cc=col;
+    rr++;
+    if((rr<10 && cc<10) && (grid[rr][cc] == 'C' || grid[rr][cc] == 'D' || grid[rr][cc] == 'S' || grid[rr][cc] == 'B')){
+        char s=tolower(grid[rr][cc]);
+        grid[rr][cc]=s;
+    }
+    rr=row;
+    cc=col;
+    cc++;
+    if((rr<10 && cc<10) && (grid[rr][cc] == 'C' || grid[rr][cc] == 'D' || grid[rr][cc] == 'S' || grid[rr][cc] == 'B')){
+        char s=tolower(grid[rr][cc]);
+        grid[rr][cc]=s;
+    }
+    rr=row;
+    cc=col;
+    rr++;
+    cc++;
+    if(((rr<10 && cc<10)==1) && ((grid[rr][cc] == 'C') || (grid[rr][cc] == 'D') || (grid[rr][cc] == 'S') || (grid[rr][cc] == 'B'))){
+        char s=tolower(grid[rr][cc]);
+        grid[rr][cc]=s;
+    }
+
+}
  
 int main() {
   char grid1 [10][10];
@@ -295,6 +331,9 @@ int main() {
   fire(grid1,gridplayer1,2,'B');
   print_Grid(gridplayer1);
   torpedo(grid1,gridplayer1,'A');
+    smokeScreen(grid1,'A',3);  
+    print_Grid(grid1);
+
 
 
 
