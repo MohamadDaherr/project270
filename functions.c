@@ -125,7 +125,7 @@ void place_ships(char grid[10][10]){
             //This variable to convert from letter to the exact index
             char column;
             scanf(" %c %d %c", &column, &row, &orientation);          
-            col = column -'A';
+            col = toupper(column) -'A';
             row--;
 
             if(check_coordinates(row,col,ships[i].size,orientation,grid)){
@@ -185,7 +185,7 @@ if (col < 0 || col >= Grid_size || row < 0 || row >= Grid_size) {
     return 1;
 }
 
-void fire(char grid[10][10] ,  int row ,char column) {
+void fire(char grid[10][10] ,  int row ,char column,int difficulty) {
     int col;
     col = toupper(column) - 'A';
     row--;  
@@ -197,7 +197,9 @@ void fire(char grid[10][10] ,  int row ,char column) {
             printf("Hit!\n");
         }
         else {
-            grid[row][col]==miss;
+            if(difficulty==1){
+                grid[row][col]=miss;
+            }
             printf("Miss!\n");
         }
     }
@@ -246,7 +248,8 @@ int main() {
     place_ships(grid2);
     print_Grid(grid2);
   
-    fire(grid1,2,'B');
+    fire(grid1,2,'B',difficulty);
+    fire(grid1,4,'I',difficulty);
     print_Grid(grid1); 
     radar_sweep(2,'B',grid1);
 }
