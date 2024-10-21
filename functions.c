@@ -199,14 +199,14 @@ void fire(char grid[10][10] , char grid2[10][10], int row ,char column) {
         if (grid[row][col] == 'C' || grid[row][col] == 'D' || grid[row][col] == 'S' || grid[row][col] == 'B') {
             grid[row][col] = hit;  
             grid2[row][col] = hit;
-            printf("Hit!\n");
+            
 
         }
         else {
             if(diff==0){
              grid[row][col]=miss;
              grid2[row][col] = miss;
-                printf("Miss!\n");
+             
             }
         }
     }
@@ -241,29 +241,23 @@ void torpedo(char grid[10][10], char grid2[10][10], char target) {
     if (is_column) {
         int col = toupper(target) - 'A'; 
 
-        // Validate the column
         if (col < 0 || col >= Grid_size) {
             printf("Invalid column. You lose your turn.\n");
             return;
         }
 
-        // Fire at each row in the specified column
         for (int row = 0; row < Grid_size; row++) {
-            fire(grid, grid2, row + 1, target); // Pass row as 1-based index
+            fire(grid, grid2, row + 1, target); 
         }
     } else {
-        // Convert target to row number
         int row = target - '1'; 
-
-        // Validate the row
         if (row < 0 || row >= Grid_size) {
             printf("Invalid row. You lose your turn.\n");
             return;
         }
 
-        // Fire at each column in the specified row
         for (int col = 0; col < Grid_size; col++) {
-            fire(grid, grid2, row + 1, col + 'A'); // Pass col as character
+            fire(grid, grid2, row + 1, col + 'A'); 
         }
     }
 }
@@ -305,6 +299,31 @@ void smokeScreen(char grid[10][10] ,  int column ,char row){
     }
 
 }
+void artillery(char grid[10][10], char grid2[10][10], int row, char column) {
+    int col = toupper(column) - 'A';  
+    row--;  
+
+    if (!validate(row, col)) {
+        printf("Invalid coordinates for artillery strike.\n");
+        return;
+    }
+
+    for (int i = row; i < row + 2 && i < Grid_size; i++) {
+        for (int j = col; j < col + 2 && j < Grid_size; j++) {
+            if (grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S' || grid[i][j] == 'B') {
+                grid[i][j] = hit;
+                grid2[i][j] = hit;
+                printf("Hit at %c%d!\n", j + 'A', i + 1);
+            } else {
+                if(diff==0){
+                grid[i][j] = miss;
+                grid2[i][j] = miss;
+                printf("Miss at %c%d.\n", j + 'A', i + 1);}
+            }
+        }
+    }
+}
+
  
 int main() {
   char grid1 [10][10];
@@ -333,7 +352,9 @@ int main() {
   torpedo(grid1,gridplayer1,'A');
     smokeScreen(grid1,'A',3);  
     print_Grid(grid1);
-
+artillery(grid1, gridplayer1,10 , 'j');
+print_Grid(gridplayer1);
+radar_sweep(1,'B',grid1);
 
 
 
