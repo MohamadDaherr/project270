@@ -29,7 +29,79 @@ Ship ships[] = {
     {"Submarine", Submarine},
 };
 
+char available_ships[]={'C','B','D','S'};
+
 int total_ships = sizeof(ships) / sizeof(ships[0]);
+
+
+int contains(char available_ships[], char letter){
+    for (int i = 0; i < total_ships; i++)
+    {
+        if(available_ships[i]==letter){
+            available_ships[i]=tolower(letter);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int sunk_ships(char grid[10][10]){
+    int count =0;
+
+    int countc=0,countb=0,countd=0,counts=0;
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            char c =  toupper(grid[i][j]);
+            switch (c)
+            {
+                case 'C':
+                    countc++;
+                    break;
+                case 'B':
+                    countb++;
+                    break;
+                case 'D':
+                    countd++;
+                    break;
+                case 'S':
+                    counts++;
+                    break;
+                default: 
+                    break;
+            }
+        }
+    }
+    
+    if(countc==0){
+        if(contains(available_ships,'C')==1){
+            printf("Carrier ship sunk!\n");
+            count++;
+        }
+    }
+    if(countb==0){
+        if(contains(available_ships,'B')==1){
+            printf("Battleship ship sunk!\n");
+            count++;
+        }
+    }
+    if(countd==0){
+        if(contains(available_ships,'D')==1){
+            printf("Destroyer ship sunk!\n");
+            count++;
+        }
+    }
+    if(counts==0){
+        if(contains(available_ships,'S')==1){
+            printf("Submarine ship sunk!\n");
+            count++;
+        }
+    }
+    return count;
+}
+
+
 int traverse_2d_array(char grid[10][10], int letter) {
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
@@ -333,13 +405,23 @@ int main() {
 //   fire(grid1,gridplayer1,2,'B');
 //   print_Grid(gridplayer1);
 //   torpedo(grid1,gridplayer1,'A');
-    smokeScreen(grid1,'A',1);  
-    print_Grid(grid1);
+    // smokeScreen(grid1,'A',1);  
+    // print_Grid(grid1);
 // artillery(grid1, gridplayer1,10 , 'j');
 print_Grid(gridplayer1);
 radar_sweep(1,'A',grid1);
 
 
+fire(grid1,gridplayer1,2,'B');
+fire(grid1,gridplayer1,2,'C');
+fire(grid1,gridplayer1,2,'D');
+fire(grid1,gridplayer1,2,'E');
+fire(grid1,gridplayer1,2,'F');
+fire(grid1,gridplayer1,9,'D');
+fire(grid1,gridplayer1,9,'E');
+print_Grid(grid1);
+print_Grid(gridplayer1);
+printf("%d",sunk_ships(grid1));
 
 
    
