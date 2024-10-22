@@ -379,43 +379,6 @@ void artillery(char grid[10][10], char grid2[10][10], int row, char column) {
     }
 }
 
- 
-// int main() {
-//   char grid1 [10][10];
-//   char grid2 [10][10];
-//   char gridplayer1 [10][10];
-//   char gridplayer2 [10][10];
-//     create_grid(grid1);
-//     create_grid(grid2);
-//     create_grid(gridplayer1);
-//     create_grid(gridplayer2);
-//     difficultyLevel();
-//     char player1[50], player2[50];  
-//     printf("Enter name of Player 1: ");
-//     scanf("%s", player1);
-//     printf("Enter name of Player 2: ");
-//     scanf("%s", player2);
-//     printf("%s please enter your ships",player1 );
-//     place_ships(grid1);
-//     print_Grid(grid1);
-   
-//     printf("%s please enter your ships",player2);
-//     place_ships(grid2);
-//     print_Grid(grid2);
-// //   fire(grid1,gridplayer1,2,'B');
-// //   print_Grid(gridplayer1);
-// //   torpedo(grid1,gridplayer1,'A');
-//     smokeScreen(grid1,'A',1);  
-//     print_Grid(grid1);
-// // artillery(grid1, gridplayer1,10 , 'j');
-// print_Grid(gridplayer1);
-// radar_sweep(1,'A',grid1);
-
-
-
-
-   
-// }
 
 
 
@@ -458,7 +421,7 @@ int main() {
     // Main game loop
     while (1) {
         // Prompt the current player to enter their move and location (e.g., "Fire B3" or "Radar A1")
-        printf("%s, enter your move (e.g., Fire B3, Radar A1): ", currentPlayer == 1 ? player1 : player2);
+        printf("%s, enter your move: ", currentPlayer == 1 ? player1 : player2);
         fgets(input, sizeof(input), stdin);  // Read the whole input line
         
         // Parse the input: first the move (string), then the column (char) and row (int)
