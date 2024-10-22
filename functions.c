@@ -216,6 +216,7 @@ void fire(char grid[10][10] , char grid2[10][10], int row ,char column) {
     
 void radar_sweep(int row,char column,char grid[10][10]){
     int col;
+    row--;
     col = toupper(column) - 'A';
     if(!validate(row,col)){
         return;
@@ -265,36 +266,19 @@ void torpedo(char grid[10][10], char grid2[10][10], char target) {
         
 
 void smokeScreen(char grid[10][10] ,  int column ,char row){
-    int col;
+     int col;
+     row--;
     col = toupper(column) - 'A';
-    row--;
-    int rr=row;
-    int cc=col;
-    if((rr<10 && cc<10) && (grid[rr][cc] == 'C' || grid[rr][cc] == 'D' || grid[rr][cc] == 'S' || grid[rr][cc] == 'B')){
-        char s=tolower(grid[rr][cc]);
-        grid[rr][cc]=s;
+    if(!validate(row,col)){
+        return;
     }
-    rr=row;
-    cc=col;
-    rr++;
-    if((rr<10 && cc<10) && (grid[rr][cc] == 'C' || grid[rr][cc] == 'D' || grid[rr][cc] == 'S' || grid[rr][cc] == 'B')){
-        char s=tolower(grid[rr][cc]);
-        grid[rr][cc]=s;
-    }
-    rr=row;
-    cc=col;
-    cc++;
-    if((rr<10 && cc<10) && (grid[rr][cc] == 'C' || grid[rr][cc] == 'D' || grid[rr][cc] == 'S' || grid[rr][cc] == 'B')){
-        char s=tolower(grid[rr][cc]);
-        grid[rr][cc]=s;
-    }
-    rr=row;
-    cc=col;
-    rr++;
-    cc++;
-    if(((rr<10 && cc<10)==1) && ((grid[rr][cc] == 'C') || (grid[rr][cc] == 'D') || (grid[rr][cc] == 'S') || (grid[rr][cc] == 'B'))){
-        char s=tolower(grid[rr][cc]);
-        grid[rr][cc]=s;
+    for (int i = row; i < row + 2 && i<Grid_size; i++) {
+        for (int j = col; j < col + 2 && j<Grid_size; j++) {
+            if (grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S' || grid[i][j] == 'B') {
+                char c=grid[i][j];
+                grid[i][j] = tolower(c);
+            }
+        }
     }
 
 }
@@ -346,14 +330,14 @@ int main() {
     printf("%s please enter your ships",player2);
     place_ships(grid2);
     print_Grid(grid2);
-  fire(grid1,gridplayer1,2,'B');
-  print_Grid(gridplayer1);
-  torpedo(grid1,gridplayer1,'A');
-    smokeScreen(grid1,'A',3);  
+//   fire(grid1,gridplayer1,2,'B');
+//   print_Grid(gridplayer1);
+//   torpedo(grid1,gridplayer1,'A');
+    smokeScreen(grid1,'A',1);  
     print_Grid(grid1);
-artillery(grid1, gridplayer1,10 , 'j');
+// artillery(grid1, gridplayer1,10 , 'j');
 print_Grid(gridplayer1);
-radar_sweep(1,'B',grid1);
+radar_sweep(1,'A',grid1);
 
 
 
