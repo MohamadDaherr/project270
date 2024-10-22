@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "functions.c"
-
 int main() {
     char grid1[10][10], grid2[10][10];  // Ship grids for Player 1 and Player 2
     char gridplayer1[10][10], gridplayer2[10][10];  // Tracking grids for hits/misses
