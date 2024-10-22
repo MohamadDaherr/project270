@@ -184,7 +184,6 @@ int done() {
 
 int validate(int row , int col){
 if (col < 0 || col >= Grid_size || row < 0 || row >= Grid_size) {
-        printf("Invalid coordinates.");
         return 0;
     }
     return 1;
