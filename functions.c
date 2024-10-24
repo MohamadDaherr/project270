@@ -557,7 +557,7 @@ int main()
     
 
     // Main game loop
-    while (ships1_sunked != 4 || ships2_sunked != 4)
+    while (ships1_sunked != 4 && ships2_sunked != 4)
     {
         // Prompt the current player to enter their move and location (e.g., "Fire B3" or "Radar A1")
         printf("%s, enter your move: ", currentPlayer == 1 ? player1 : player2);
@@ -715,14 +715,14 @@ int main()
             }
         }
    
-        if (ships1_sunked == 3 && once1)
+        if (ships2_sunked == 3 && once1)
         {
           //  torpedo1++;
             istorpido1 = 1;
             artillery1_flag = 0;
             once1 = 0;
         }
-        if (ships2_sunked == 3 && once2)
+        if (ships1_sunked == 3 && once2)
         {
             torpedo2++;
             istorpido2 = 1;
