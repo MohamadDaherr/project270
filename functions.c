@@ -16,6 +16,7 @@
 #define Submarine 2
 
 int diff;
+int currentPlayer;
 
 typedef struct
 {
@@ -30,7 +31,8 @@ Ship ships[] = {
     {"Submarine", Submarine},
 };
 
-char available_ships[] = {'C', 'B', 'D', 'S'};
+char available_ships1[] = {'C', 'B', 'D', 'S'};
+char available_ships2[] = {'C', 'B', 'D', 'S'};
 
 int total_ships = sizeof(ships) / sizeof(ships[0]);
 
@@ -62,16 +64,16 @@ int sunk_ships(char grid[10][10])
             case 'C':
                 countc++;
                 break;
+
             case 'B':
                 countb++;
                 break;
+
             case 'D':
                 countd++;
                 break;
             case 'S':
                 counts++;
-                break;
-            default:
                 break;
             }
         }
@@ -79,36 +81,81 @@ int sunk_ships(char grid[10][10])
 
     if (countc == 0)
     {
-        if (contains(available_ships, 'C') == 1)
+        if (currentPlayer == 1)
         {
-            printf("Carrier ship sunk!\n");
-            count++;
+            if (contains(available_ships2, 'C') == 1)
+            {
+                printf("Carrier ship sunk!\n");
+                count++;
+            }
+        }
+        else
+        {
+            if (contains(available_ships1, 'C') == 1)
+            {
+                printf("Carrier ship sunk!\n");
+                count++;
+            }
         }
     }
     if (countb == 0)
     {
-        if (contains(available_ships, 'B') == 1)
+        if (currentPlayer == 1)
         {
-            printf("Battleship ship sunk!\n");
-            count++;
+            if (contains(available_ships1, 'B') == 1)
+            {
+                printf("Battleship ship sunk!\n");
+                count++;
+            }
+        }
+        else
+        {
+            if (contains(available_ships2, 'B') == 1)
+            {
+                printf("Battleship ship sunk!\n");
+                count++;
+            }
         }
     }
     if (countd == 0)
     {
-        if (contains(available_ships, 'D') == 1)
+        if (currentPlayer == 1)
         {
-            printf("Destroyer ship sunk!\n");
-            count++;
+            if (contains(available_ships1, 'D') == 1)
+            {
+                printf("Destroyer ship sunk!\n");
+                count++;
+            }
+        }
+        else
+        {
+            if (contains(available_ships2, 'D') == 1)
+            {
+                printf("Destroyer ship sunk!\n");
+                count++;
+            }
         }
     }
     if (counts == 0)
     {
-        if (contains(available_ships, 'S') == 1)
+        if (currentPlayer == 1)
         {
-            printf("Submarine ship sunk!\n");
-            count++;
+            if (contains(available_ships1, 'S') == 1)
+            {
+                printf("Submarine ship sunk!\n");
+                count++;
+            }
+        }
+        else
+        {
+            if (contains(available_ships2, 'S') == 1)
+            {
+                printf("Submarine ship sunk!\n");
+                count++;
+            }
         }
     }
+   
     return count;
 }
 
@@ -303,6 +350,7 @@ int validate(int row, int col)
 {
     if (col < 0 || col >= Grid_size || row < 0 || row >= Grid_size)
     {
+        printf("ERROR YA HMAR \n");
         return 0;
     }
     return 1;
@@ -316,7 +364,7 @@ void fire(char grid[10][10], char grid2[10][10], int row, char column)
 
     if (validate(row, col))
     {
-        if (toupper(grid[row][col]) == 'C' || toupper(grid[row][col]) == 'D' || toupper(grid[row][col]) == 'S' || toupper(grid[row][col]) == 'B')
+        if (toupper(grid[row][col]) == 'C' || toupper(grid[row][col]) == 'D' || toupper(grid[row][col]) == 'S' || toupper(grid[row][col]) == 'B' || grid[row][col] == '*')
         {
             grid[row][col] = hit;
             grid2[row][col] = hit;
@@ -470,7 +518,6 @@ int main()
     difficultyLevel();
 
     char player1[50], player2[50];
-    int currentPlayer;
 
     // Get player names
     printf("Enter name of Player 1: ");
@@ -490,14 +537,27 @@ int main()
     char input[50];
     char move[20], column;
     int row;
-    int radar_count = 0;
-    int smoke1 = 1;
-    int smoke2 = 1;
-    int ship1 = 0;
-    int ship2 = 0;
+    int radar1_count = 3;
+    int radar2_count = 3;
+    int smoke1 = 0;
+    int smoke2 = 0;
+    int ships1_sunked = 0;
+    int ships2_sunked = 0;
+    int artillery1_flag = 0;
+    int artillery2_flag = 0;
+
+    int istorpido1 = 0;
+    int istorpido2 = 0;
+    int torpedo1 = 0;
+    int torpedo2 = 0;
+
+    int once1 = 1;
+    int once2 = 1;
+    int a1;
+    
 
     // Main game loop
-    while (ship1 != 4 || ship2 != 4)
+    while (ships1_sunked != 4 && ships2_sunked != 4)
     {
         // Prompt the current player to enter their move and location (e.g., "Fire B3" or "Radar A1")
         printf("%s, enter your move: ", currentPlayer == 1 ? player1 : player2);
@@ -505,37 +565,52 @@ int main()
 
         // Parse the input: first the move (string), then the column (char) and row (int)
         sscanf(input, "%s %c%d", move, &column, &row);
-        move[0] = tolower(move[0]); // Convert the move to lowercase for case-insensitivity
+        for (int i = 0; move[i] != '\0'; i++)
+        {
+            move[i] = tolower(move[i]);
+        } // Convert the move to lowercase for case-insensitivity
 
         // Perform the corresponding action based on the move
         if (strcmp(move, "fire") == 0)
         {
             // Fire move
+
+
             if (currentPlayer == 1)
             {
-                fire(grid2, gridplayer1, row, column); // Player 1 fires at Player 2's grid
-                print_Grid(gridplayer1);
+                artillery1_flag = 0;
+                istorpido1 = 0;
+
+                fire(grid2, gridplayer2, row, column); // Player 1 fires at Player 2's grid
+                print_Grid(gridplayer2);
             }
             else
             {
-                fire(grid1, gridplayer2, row, column); // Player 2 fires at Player 1's grid
-                print_Grid(gridplayer2);
+                artillery2_flag = 0;
+                istorpido2 = 0;
+                fire(grid1, gridplayer1, row, column); // Player 2 fires at Player 1's grid
+                print_Grid(gridplayer1);
             }
         }
         else if (strcmp(move, "radar") == 0)
         {
             // Radar sweep
-            if (radar_count < 3)
+            if (radar1_count > 0)
             {
                 if (currentPlayer == 1)
                 {
+                    artillery1_flag = 0;
+                    istorpido1 = 0;
                     radar_sweep(row, column, grid2); // Player 1 performs radar sweep on Player 2's grid
+                    radar1_count--;
                 }
                 else
                 {
+                    artillery2_flag = 0;
+                    istorpido2 = 0;
                     radar_sweep(row, column, grid1); // Player 2 performs radar sweep on Player 1's grid
+                    radar2_count--;
                 }
-                radar_count++;
             }
             else
             {
@@ -549,6 +624,8 @@ int main()
 
                 if (currentPlayer == 1)
                 {
+                    artillery1_flag = 0;
+                    istorpido1 = 0;
                     if (smoke1 >= 1)
                     {
                         smokeScreen(grid1, row, column); // Player 1 obscures their own grid
@@ -559,44 +636,57 @@ int main()
                 }
                 else
                 {
+                    artillery2_flag = 0;
+                    istorpido2 = 0;
                     if (smoke2 >= 1)
                     {
                         smokeScreen(grid2, row, column); // Player 2 obscures their own grid
                         smoke2--;
                     }
-                    else printf("You have used all available smoke screens.\n");
-                    
+                    else
+                        printf("You have used all available smoke screens.\n");
                 }
-  
             }
         }
         else if (strcmp(move, "artillery") == 0)
         {
             // Artillery move
-            if (currentPlayer == 1)
+            if (currentPlayer == 1 && artillery1_flag)
             {
-                artillery(grid2, gridplayer1, row, column); // Player 1 fires artillery at Player 2's grid
+                artillery(grid2, gridplayer2, row, column); // Player 1 fires artillery at Player 2's grid
+                print_Grid(gridplayer2);
+                artillery1_flag = 0;
+                istorpido1 = 0;
+            }
+            else if (currentPlayer == 2 && artillery2_flag)
+            {
+                artillery(grid1, gridplayer1, row, column); // Player 2 fires artillery at Player 1's grid
                 print_Grid(gridplayer1);
+                artillery2_flag = 0;
+                istorpido2 = 0;
             }
             else
-            {
-                artillery(grid1, gridplayer2, row, column); // Player 2 fires artillery at Player 1's grid
-                print_Grid(gridplayer2);
-            }
+                printf("No available moves.\n");
         }
         else if (strcmp(move, "torpedo") == 0)
         {
             // Torpedo move (entire row or column)
-            if (currentPlayer == 1)
+            if (currentPlayer == 1 && istorpido1)
+            {// printf("%d \n", istorpido1);
+                artillery1_flag = 0;
+                torpedo(grid2, gridplayer2, column); // Player 1 fires torpedo at Player 2's grid
+                print_Grid(gridplayer2);
+                istorpido1 = 0;
+            }
+            else if (currentPlayer == 2 && istorpido2)
             {
-                torpedo(grid2, gridplayer1, column); // Player 1 fires torpedo at Player 2's grid
+                artillery2_flag = 0;
+                torpedo(grid1, gridplayer1, column); // Player 2 fires torpedo at Player 1's grid
                 print_Grid(gridplayer1);
+                istorpido2 = 0;
             }
             else
-            {
-                torpedo(grid1, gridplayer2, column); // Player 2 fires torpedo at Player 1's grid
-                print_Grid(gridplayer2);
-            }
+                printf("No available move");
         }
         else
         {
@@ -606,21 +696,47 @@ int main()
 
         if (currentPlayer == 1)
         {
-            if (sunk_ships > 0)
+             a1 = sunk_ships(grid2);
+            if (a1 > 0)
             {
-                smoke1 += sunk_ships(grid2);
-                ship2 += sunk_ships(grid2);
+                smoke1 += a1;
+                ships2_sunked += a1;
+                artillery1_flag = 1;
             }
         }
         else
         {
-            smoke2 += sunk_ships(grid1);
-            ship1 += sunk_ships(grid1);
+            int a2 = sunk_ships(grid1);
+            if (a2 > 0)
+            {
+                smoke2 += a2;
+                ships1_sunked += a2;
+                artillery2_flag = 1;
+            }
         }
+   
+        if (ships2_sunked == 3 && once1)
+        {
+          //  torpedo1++;
+            istorpido1 = 1;
+            artillery1_flag = 0;
+            once1 = 0;
+        }
+        if (ships1_sunked == 3 && once2)
+        {
+            torpedo2++;
+            istorpido2 = 1;
+            artillery2_flag = 0;
+            once2 = 0;
+                        printf("torpido unloacked");
+
+        }
+                        printf("%d\n",istorpido1);
+
+
         // Switch turns
         currentPlayer = (currentPlayer == 1) ? 2 : 1;
     }
 
     return 0;
 }
-//hi
