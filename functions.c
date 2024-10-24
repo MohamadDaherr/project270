@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h>
+#include <unistd.h>
 
 #define ship 'S'
 #define water '~'
@@ -155,7 +157,7 @@ int sunk_ships(char grid[10][10])
             }
         }
     }
-   
+
     return count;
 }
 
@@ -264,9 +266,12 @@ int check_coordinates(int row, int col, int size, char orientation, char grid[Gr
                 return 0;
         }
     }
+    else
+    {
+        return 0;
+    }
     return 1;
 }
-
 void place_ships(char grid[10][10])
 {
     for (int i = 0; i < total_ships; i++)
@@ -274,18 +279,27 @@ void place_ships(char grid[10][10])
         int row, col;
         char orientation;
         int valid = 1;
-
+        char column;
         while (valid)
         {
             printf("Place your %s (size %d).\n", ships[i].name, ships[i].size);
             printf("Enter column (A_J), row (1-10), and orientation (H for horizontal, V for vertical): ");
-
-            // This variable to convert from letter to the exact index
-            char column;
-            scanf(" %c %d %c", &column, &row, &orientation);
+            // scanf(" %c %d %c", &column, &row, &orientation);
+            if (scanf(" %c %d %c", &column, &row, &orientation) != 3)
+            {
+                printf("Invalid input format. Try again.\n");
+                // Clear input buffer
+                while (getchar() != '\n')
+                    ;
+                continue; // Go back to the beginning of the loop
+            }
+            if (!isalpha(column))
+            {
+                printf("Invalid input format. Try again.\n");
+                continue; // Skip to the next iteration
+            }
             col = toupper(column) - 'A';
             row--;
-
             if (check_coordinates(row, col, ships[i].size, orientation, grid))
             {
                 for (int j = 0; j < ships[i].size; j++)
@@ -294,7 +308,7 @@ void place_ships(char grid[10][10])
                     {
                         grid[row][col + j] = ships[i].name[0];
                     }
-                    else
+                    else if (orientation == 'V' || orientation == 'v')
                     {
                         grid[row + j][col] = ships[i].name[0];
                     }
@@ -308,7 +322,6 @@ void place_ships(char grid[10][10])
         }
     }
 }
-
 int firstPlayer(char player1[], char player2[])
 {
     srand(time(NULL));
@@ -413,41 +426,35 @@ void radar_sweep(int row, char column, char grid[10][10])
         printf("No enemy ships found.\n");
     }
 }
-void torpedo(char grid[10][10], char grid2[10][10], char target)
+void torpedo(char grid[10][10], char grid2[10][10], int target)
 {
-    int is_column = isalpha(target);
-
-    if (is_column)
+    if (target >= 1 && target <= Grid_size)
     {
-        int col = toupper(target) - 'A';
-
-        if (col < 0 || col >= Grid_size)
-        {
-            printf("Invalid column. You lose your turn.\n");
-            return;
-        }
-
-        for (int row = 0; row < Grid_size; row++)
-        {
-            fire(grid, grid2, row + 1, target);
-        }
-    }
-    else
-    {
-        int row = target - '1';
-        if (row < 0 || row >= Grid_size)
+        if (target < 0 || target > Grid_size)
         {
             printf("Invalid row. You lose your turn.\n");
             return;
         }
-
         for (int col = 0; col < Grid_size; col++)
         {
-            fire(grid, grid2, row + 1, col + 'A');
+            fire(grid, grid2, target, col + 'A'); // Convert column number to letter ('A' to 'J')
+        }
+    }
+    else
+    {
+        // If the target is not a valid row, check if it's a valid column (ASCII code for 'A' to 'J')
+        int col = target - 'A';
+        if (!(target >= 'A' && target <= 'J'))
+        {
+            printf("Invalid column. You lose your turn.\n");
+            return;
+        }
+        for (int row = 1; row <= Grid_size; row++)
+        {
+            fire(grid, grid2, row, col + 'A'); // Fire at each row in the given column
         }
     }
 }
-
 void smokeScreen(char grid[10][10], int row, char column)
 {
     int col;
@@ -502,6 +509,10 @@ void artillery(char grid[10][10], char grid2[10][10], int row, char column)
         }
     }
 }
+void clear_screen()
+{
+    system("cls");
+}
 
 int main()
 {
@@ -554,27 +565,54 @@ int main()
     int once1 = 1;
     int once2 = 1;
     int a1;
-    
 
     // Main game loop
     while (ships1_sunked != 4 && ships2_sunked != 4)
     {
+        clear_screen();
+        
+        if (currentPlayer == 1)
+        {
+            print_Grid(gridplayer2);
+        }
+        else
+        {
+            print_Grid(gridplayer1);
+        }
         // Prompt the current player to enter their move and location (e.g., "Fire B3" or "Radar A1")
         printf("%s, enter your move: ", currentPlayer == 1 ? player1 : player2);
         fgets(input, sizeof(input), stdin); // Read the whole input line
-
         // Parse the input: first the move (string), then the column (char) and row (int)
-        sscanf(input, "%s %c%d", move, &column, &row);
-        for (int i = 0; move[i] != '\0'; i++)
+        sscanf(input, "%s", move);
+        for (int i = 0; i < move[i] != '\0'; i++)
         {
-            move[i] = tolower(move[i]);
-        } // Convert the move to lowercase for case-insensitivity
-
+            move[0] = tolower(move[0]);
+        }
+        if (strcmp(move, "torpedo") == 0)
+        {
+            // If the move is "Torpedo", parse the row as an integer (can be multiple digits)
+            if (sscanf(input, "%s %d", move, &row) == 2)
+            {
+                // If it's a number (row), process it
+                sscanf(input, "%s %d", move, &row);
+            }
+            else if (sscanf(input, "%s %c", move, &column) == 2)
+            {
+                // If it's a letter (column), process it
+                sscanf(input, "%s %c", move, &column);
+                int asci = (int)column;
+                row = asci;
+            }
+        }
+        else
+        {
+            // Parse the input: first the move (string), then the column (char) and row (int)
+            sscanf(input, "%s %c%d", move, &column, &row);
+        }
         // Perform the corresponding action based on the move
         if (strcmp(move, "fire") == 0)
         {
             // Fire move
-
 
             if (currentPlayer == 1)
             {
@@ -614,7 +652,7 @@ int main()
             }
             else
             {
-                printf("You have used all 3 radar sweeps.\n");
+                printf("You have used all 3 radar sweeps.  :( \n");
             }
         }
         else if (strcmp(move, "smoke") == 0)
@@ -632,7 +670,7 @@ int main()
                         smoke1--;
                     }
                     else
-                        printf("You have used all available smoke screens.\n");
+                        printf("You have used all available smoke screens. :(  :( \n");
                 }
                 else
                 {
@@ -644,7 +682,7 @@ int main()
                         smoke2--;
                     }
                     else
-                        printf("You have used all available smoke screens.\n");
+                        printf("You have used all available smoke screens.  :( \n");
                 }
             }
         }
@@ -666,37 +704,37 @@ int main()
                 istorpido2 = 0;
             }
             else
-                printf("No available moves.\n");
+                printf("No available moves.  :( \n");
         }
         else if (strcmp(move, "torpedo") == 0)
         {
             // Torpedo move (entire row or column)
             if (currentPlayer == 1 && istorpido1)
-            {// printf("%d \n", istorpido1);
+            { // printf("%d \n", istorpido1);
                 artillery1_flag = 0;
-                torpedo(grid2, gridplayer2, column); // Player 1 fires torpedo at Player 2's grid
+                torpedo(grid2, gridplayer2, row); // Player 1 fires torpedo at Player 2's grid
                 print_Grid(gridplayer2);
                 istorpido1 = 0;
             }
             else if (currentPlayer == 2 && istorpido2)
             {
                 artillery2_flag = 0;
-                torpedo(grid1, gridplayer1, column); // Player 2 fires torpedo at Player 1's grid
+                torpedo(grid1, gridplayer1, row); // Player 2 fires torpedo at Player 1's grid
                 print_Grid(gridplayer1);
                 istorpido2 = 0;
             }
             else
-                printf("No available move");
+                printf("No available move.  :( \n");
         }
         else
         {
-            printf("Invalid move. Try again.\n");
+            printf("Invalid move. Try again :( \n");
             continue; // Ask for the next move
         }
 
         if (currentPlayer == 1)
         {
-             a1 = sunk_ships(grid2);
+            a1 = sunk_ships(grid2);
             if (a1 > 0)
             {
                 smoke1 += a1;
@@ -714,10 +752,10 @@ int main()
                 artillery2_flag = 1;
             }
         }
-   
+
         if (ships2_sunked == 3 && once1)
         {
-          //  torpedo1++;
+            //  torpedo1++;
             istorpido1 = 1;
             artillery1_flag = 0;
             once1 = 0;
@@ -728,15 +766,20 @@ int main()
             istorpido2 = 1;
             artillery2_flag = 0;
             once2 = 0;
-                        printf("torpido unloacked");
-
+            printf("torpido unlocked!");
         }
-                        printf("%d\n",istorpido1);
-
+                sleep(3);
 
         // Switch turns
         currentPlayer = (currentPlayer == 1) ? 2 : 1;
     }
-
+    if (ships1_sunked = 4)
+    {
+        printf("%s won !!!\n", player2);
+    }
+    else
+    {
+        printf("%s won !!!\n", player1);
+    }
     return 0;
 }
