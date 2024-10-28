@@ -1,0 +1,16 @@
+int contains(char available_ships[], char letter);
+int sunk_ships(char grid[10][10]);
+int traverse_2d_array(char grid[10][10], int letter);
+void print_Grid(char grid[10][10]);
+void create_grid(char grid[10][10]);
+void difficultyLevel();
+int check_coordinates(int row, int col, int size, char orientation, char grid[10][10]);
+void place_ships(char grid[10][10]);
+int firstPlayer(char player1[], char player2[]);
+int validate(int row, int col);
+void fire(char grid[10][10], char grid2[10][10], int row, char column);
+void radar_sweep(int row, char column, char grid[10][10]);
+void torpedo(char grid[10][10], char grid2[10][10], int target);
+void smokeScreen(char grid[10][10], int row, char column);
+void artillery(char grid[10][10], char grid2[10][10], int row, char column);
+void clear_screen();

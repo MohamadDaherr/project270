@@ -5,6 +5,8 @@
 #include <time.h>
 #include <windows.h>
 #include <unistd.h>
+#include "function_headers.h"
+
 
 #define ship 'S'
 #define water '~'
