@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <unistd.h>
 #include "functions.c"
+#include "function_headers.h"
 
 int main()
 {
