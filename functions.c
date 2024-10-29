@@ -240,7 +240,7 @@ void difficultyLevel()
     }
 }
 
-int check_coordinates(int row, int col, int size, char orientation, char grid[Grid_size][Grid_size])
+int check_coordinates(int row, int col, int size, char orientation, char grid[10][10])
 {
     if (orientation == 'H' || orientation == 'h')
     {
@@ -284,17 +284,30 @@ void place_ships(char grid[10][10])
         char column;
         while (valid)
         {
-            printf("Place your %s (size %d).\n", ships[i].name, ships[i].size);
+            printf("\nPlace your %s (size %d).\n", ships[i].name, ships[i].size);
             printf("Enter column (A_J), row (1-10), and orientation (H for horizontal, V for vertical): ");
-            // scanf(" %c %d %c", &column, &row, &orientation);
-            if (scanf(" %c %d %c", &column, &row, &orientation) != 3)
-            {
-                printf("Invalid input format. Try again.\n");
-                // Clear input buffer
-                while (getchar() != '\n')
-                    ;
-                continue; // Go back to the beginning of the loop
+            int numScanned = scanf(" %c %d %c", &column, &row, &orientation);
+
+            
+            if (numScanned != 3) {
+                printf("Invalid input Format.\n");
+                
+                // Clear the input buffer to handle any extra input
+                while (getchar() != '\n');
+                
+                continue; 
             }
+
+            
+            char extra;
+            if (scanf("%c", &extra) == 1 && extra != '\n') {
+                printf("Invalid input Format.\n");
+                
+                while (getchar() != '\n');
+                
+                continue; 
+            }
+
             if (!isalpha(column))
             {
                 printf("Invalid input format. Try again.\n");
