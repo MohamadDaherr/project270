@@ -83,9 +83,9 @@ int main()
         printf("%s, enter your move: ", currentPlayer == 1 ? player1 : player2);
         fgets(input, sizeof(input), stdin);
         sscanf(input, "%s", move);
-        for (int i = 0; i < move[i] != '\0'; i++)
+        for (int i = 0; move[i] != '\0'; i++)
         {
-            move[i] = tolower(move[i]);
+           move[i]=tolower(move[i]);
         }
         if (strcmp(move, "torpedo") == 0)
         {
@@ -103,6 +103,10 @@ int main()
         else
         {
             sscanf(input, "%s %c%d", move, &column, &row);
+        }
+        for (int i = 0; move[i] != '\0'; i++)
+        {
+           move[i]=tolower(move[i]);
         }
         if (strcmp(move, "fire") == 0)
         {
