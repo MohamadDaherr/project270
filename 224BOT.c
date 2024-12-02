@@ -792,4 +792,5 @@ void bot_medium_play(char opponentGrid[10][10], char trackingGrid[10][10], char 
     }
     // Step 4: Random Targeting
     bot_fire_random_easy_medium(opponentGrid, trackingGrid);
+
 }
