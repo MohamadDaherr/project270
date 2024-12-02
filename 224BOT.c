@@ -393,6 +393,87 @@ void radar_sweep_and_process(int row, char column, char opponentGrid[10][10], ch
     }
 }
 
+void artilleryBotEasy(char grid[10][10], char grid2[10][10], int row, char column)
+{
+    int col = toupper(column) - 'A';
+    row--;
+
+    if (!validate(row, col))
+    {
+        printf("Invalid coordinates for artillery strike.\n");
+        return;
+    }
+
+    for (int i = row; i < row + 2 && i < Grid_size; i++)
+    {
+        for (int j = col; j < col + 2 && j < Grid_size; j++)
+        {
+            if (grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S' || grid[i][j] == 'B')
+            {
+                grid[i][j] = hit;
+                grid2[i][j] = hit;
+                
+            }
+            else if (diff == 0 && grid[i][j] == water)
+            {
+                grid[i][j] = miss;
+                grid2[i][j] = miss;
+            }
+        }
+    }
+
+     for (int i = row; i < row + 2 && i < Grid_size; i++)
+        {
+            for (int j = col; j < col + 2 && j < Grid_size; j++)
+            {
+                if (grid2[i][j] == hit)
+                    enqueue_adjacent_cells(i, j,grid2);
+            }
+        }
+}
+
+void torpedoBot_easy(char grid[10][10], char grid2[10][10], int target)
+{
+    if (target >= 1 && target <= Grid_size)
+    {
+        // Target is a valid row
+        int row = target - 1; // Convert to 0-based index
+        for (int col = 0; col < Grid_size; col++)
+        {
+            if ((toupper(grid[row][col]) == 'C' || toupper(grid[row][col]) == 'D' ||
+                 toupper(grid[row][col]) == 'S' || toupper(grid[row][col]) == 'B') &&
+                grid2[row][col] != hit)
+            {
+                enqueue_if_valid(row+1,col,grid2);
+                enqueue_if_valid(row-1,col,grid2);
+
+            }
+            fire(grid, grid2, row + 1, col + 'A'); // Fire at each cell in the row
+        }
+    }
+    else if (target >= 'A' && target <= 'J')
+    {
+        // Target is a valid column
+        int col = target - 'A'; // Convert letter to column index
+        for (int row = 0; row < Grid_size; row++)
+        {
+            if ((toupper(grid[row][col]) == 'C' || toupper(grid[row][col]) == 'D' ||
+                 toupper(grid[row][col]) == 'S' || toupper(grid[row][col]) == 'B') &&
+                grid2[row][col] != hit)
+            {
+                // Enqueue the hit for further processing
+                enqueue_if_valid(row,col-1,grid2);
+                enqueue_if_valid(row,col+1,grid2);
+            }
+            fire(grid, grid2, row + 1, col + 'A'); // Fire at each cell in the column
+        }
+    }
+    else
+    {
+        printf("Invalid torpedo target. The bot loses its turn.\n");
+    }
+}
+
 void bot_fire_random_easy_medium(char opponentGrid[10][10], char trackingGrid[10][10])
 {
     currentTarget.processing = 0;
@@ -800,44 +881,7 @@ void bot_medium_play(char opponentGrid[10][10], char trackingGrid[10][10], char 
 
 }
 
-void artilleryBotEasy(char grid[10][10], char grid2[10][10], int row, char column)
-{
-    int col = toupper(column) - 'A';
-    row--;
 
-    if (!validate(row, col))
-    {
-        printf("Invalid coordinates for artillery strike.\n");
-        return;
-    }
-
-    for (int i = row; i < row + 2 && i < Grid_size; i++)
-    {
-        for (int j = col; j < col + 2 && j < Grid_size; j++)
-        {
-            if (grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S' || grid[i][j] == 'B')
-            {
-                grid[i][j] = hit;
-                grid2[i][j] = hit;
-                
-            }
-            else if (diff == 0 && grid[i][j] == water)
-            {
-                grid[i][j] = miss;
-                grid2[i][j] = miss;
-            }
-        }
-    }
-
-     for (int i = row; i < row + 2 && i < Grid_size; i++)
-        {
-            for (int j = col; j < col + 2 && j < Grid_size; j++)
-            {
-                if (grid2[i][j] == hit)
-                    enqueue_adjacent_cells(i, j,grid2);
-            }
-        }
-}
 void bot_hard_play(char opponentGrid[10][10], char trackingGrid[10][10], char botGrid[10][10])
 {
 
