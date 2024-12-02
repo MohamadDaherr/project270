@@ -12,7 +12,7 @@ void difficultyLevel();
 int check_coordinates(int row, int col, int size, char orientation, char grid[10][10]);
 void place_ships(char grid[10][10]);
 int firstPlayer(char player1[], char player2[]);
-
+void difficultyLevelBot();
 int validate(int row, int col);
 void fire(char grid[10][10], char grid2[10][10], int row, char column);
 void radar_sweep(int row, char column, char grid[10][10]);
@@ -43,7 +43,7 @@ void bot_medium_play(char opponentGrid[10][10], char trackingGrid[10][10], char 
 void bot_easy_play(char opponentGrid[10][10], char trackingGrid[10][10], char botGrid[10][10]);
 void place_ships_randomly(char grid[10][10]);
 void bot_fire_random_easy_medium(char opponentGrid[10][10], char trackingGrid[10][10]);
-
+void torpedoBot_easy(char grid[10][10], char grid2[10][10], int target);
 void clear_screen();
 
 #endif
