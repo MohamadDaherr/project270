@@ -1,4 +1,22 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+#include <unistd.h>
+#include "function_headers.h"
 
+
+#define ship 'S'
+#define water '~'
+#define Grid_size 10
+#define hit '*'
+#define miss 'o'
+#define Carrier 5
+#define Battleship 4
+#define Destroyer 3
+#define Submarine 2
 
 #define MAX_QUEUE_SIZE 100
 
@@ -9,7 +27,7 @@ int smokeScreensUsed = 0;
 int artilleryAvailable = 0;
 int torpedoAvailable = 0;
 int submarineHidden=0;
-
+int smoke2 = 0;
 
 int diffBot;
 
@@ -105,6 +123,15 @@ int isQueueEmptyvert()
 {
     return front2 == -1 || front2 > rear2;
 }
+int validateForQueue(int row, int col)
+{
+    if (col < 0 || col >= Grid_size || row < 0 || row >= Grid_size)
+    {
+        // printf("ERROR: Out of bounds at row %d, column %c\n", row + 1, col + 'A');
+        return 0;
+    }
+    return 1;
+}
 
 void enqueue_if_valid(int row, int column, char trackingGrid[10][10])
 {
@@ -129,6 +156,7 @@ void enqueue_if_valid_vertical(int row, int col, char trackingGrid[10][10])
     }
 }
 
+
 void enqueue_adjacent_cells(int row, int col, char trackingGrid[10][10])
 {
     if (validateForQueue(row - 1, col) && trackingGrid[row - 1][col] == water)
@@ -148,6 +176,41 @@ void enqueue_adjacent_cells(int row, int col, char trackingGrid[10][10])
     if (validateForQueue(row, col + 1) && trackingGrid[row][col + 1] == water)
     {
         enqueue(row, col + 1);
+    }
+}
+void difficultyLevelBot()
+{
+    char difficulty[10];
+    while (1)
+    {
+        printf("Choose difficulty Bot level (Easy - Medium - Hard): ");
+        scanf("%s", difficulty);
+        for (int i = 0; difficulty[i]; i++)
+        {
+            difficulty[i] = tolower(difficulty[i]);
+        }
+        if (strcmp(difficulty, "easy") == 0)
+        {
+            diffBot = 0;
+            printf("You have chosen easy mode.\n");
+            break;
+        }
+        else if (strcmp(difficulty, "medium") == 0)
+        {
+            diffBot = 1;
+            printf("You have chosen medium mode.\n");
+            break;
+        }
+        else if (strcmp(difficulty, "hard") == 0)
+        {
+            diffBot = 2;
+            printf("You have chosen hard mode.\n");
+            break;
+        }
+        else
+        {
+            printf("Invalid input. Please enter either 'easy' or 'hard'.\n");
+        }
     }
 }
 
@@ -180,10 +243,6 @@ void place_ships_randomly(char grid[10][10])
             }
         }
     }
-}
-void clear_screen()
-{
-    system("cls");
 }
 
 
@@ -575,7 +634,7 @@ void bot_easy_play(char opponentGrid[10][10], char trackingGrid[10][10], char bo
             row = rand() % (Grid_size - 1);
             col = rand() % (Grid_size - 1);
         } while (trackingGrid[row][col] != water); // Ensure the cell is untargeted
-        printf("Targeting cell (%d, %d) with Artillery...\n", row +1,col+'A');
+        printf("Targeting cell (%d, %c) with Artillery...\n", row +1,col+'A');
         artilleryBotEasy(opponentGrid, trackingGrid, row + 1, col + 'A');
         artilleryAvailable = 0;
         return;                 
@@ -956,7 +1015,7 @@ void bot_hard_play(char opponentGrid[10][10], char trackingGrid[10][10], char bo
             col = rand() % (Grid_size - 1);
         } while (trackingGrid[row][col] != water); // Ensure the cell is untargeted
 
-        printf("Targeting cell (%d, %d) with Artillery...\n", row +1,col+'A');
+        printf("Targeting cell (%d, %c) with Artillery...\n", row +1,col+'A');
         artilleryBot(opponentGrid, trackingGrid, row + 1, col + 'A');
         artilleryAvailable = 0; 
     }
@@ -1167,7 +1226,7 @@ void bot_fire_random_until_hit(char opponentGrid[10][10], char trackingGrid[10][
         if (trackingGrid[row][col] == water)
         {
             valid = 1;
-            if(count_for_grid<20){
+            if(count_for_grid<25){
             // Check surrounding cells to ensure no neighbors are hit
             if (trackingGrid[row - 1][col] != water)
                 valid = 0; // Up
